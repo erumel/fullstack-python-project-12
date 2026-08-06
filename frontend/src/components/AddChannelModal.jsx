@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addChannel } from '../features/channels/channelsSlice'
 import Modal from './Modal'
 import { useTranslation } from 'react-i18next'
+import { cleanText, hasBadWords } from '../utils/profanity'
 
 const AddChannelModal = ({ isOpen, onClose }) => {
   const { t } = useTranslation()
@@ -20,13 +21,14 @@ const AddChannelModal = ({ isOpen, onClose }) => {
   const formik = useFormik({
     initialValues: { name: '' },
     validationSchema: validationSchema.shape({
-      name: validationSchema.fields.name.notOneOf(
-        channels.map(c => c.name),
-        t('modals.addChannel.errors.exists'),
-      ),
+      name: validationSchema.fields.name
+        .notOneOf(channels.map(c => c.name), t('modals.addChannel.errors.exists'))
+        .test('no-bad-words', t('modals.addChannel.errors.badWords'), value => !hasBadWords(value || '')),
     }),
+
     onSubmit: async (values, { resetForm }) => {
-      const result = await dispatch(addChannel(values.name))
+      const cleanedName = cleanText(values.name)
+      const result = await dispatch(addChannel(cleanedName))
       if (addChannel.fulfilled.match(result)) {
         resetForm()
         onClose()

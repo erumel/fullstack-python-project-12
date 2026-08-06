@@ -67,6 +67,12 @@ export default {
         cancel: 'Отмена',
         submit: 'Удалить',
       },
+      errors: {
+        length: 'От 3 до 20 символов',
+        exists: 'Канал уже существует',
+        required: 'Обязательное поле',
+        badWords: 'Недопустимое название',
+      },
     },
     notFound: {
       title: '404',

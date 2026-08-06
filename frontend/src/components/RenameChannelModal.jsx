@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { renameChannel } from '../features/channels/channelsSlice'
 import Modal from './Modal'
+import { cleanText, hasBadWords } from '../utils/profanity'
 
 const RenameChannelModal = ({ isOpen, onClose, channel }) => {
   const { t } = useTranslation()
@@ -22,13 +23,17 @@ const RenameChannelModal = ({ isOpen, onClose, channel }) => {
     initialValues: { name: channel?.name || '' },
     enableReinitialize: true,
     validationSchema: validationSchema.shape({
-      name: validationSchema.fields.name.notOneOf(
-        channels.filter(c => c.id !== channel?.id).map(c => c.name),
-        t('modals.addChannel.errors.exists'),
-      ),
+      name: validationSchema.fields.name
+        .notOneOf(
+          channels.filter(c => c.id !== channel?.id).map(c => c.name),
+          t('modals.addChannel.errors.exists'),
+        )
+        .test('no-bad-words', t('modals.addChannel.errors.badWords'), value => !hasBadWords(value || '')),
     }),
+
     onSubmit: async (values) => {
-      const result = await dispatch(renameChannel({ id: channel.id, name: values.name }))
+      const cleanedName = cleanText(values.name)
+      const result = await dispatch(renameChannel({ id: channel.id, name: cleanedName }))
       if (renameChannel.fulfilled.match(result)) {
         onClose()
       }

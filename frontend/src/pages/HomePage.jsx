@@ -8,6 +8,7 @@ import AddChannelModal from '../components/AddChannelModal'
 import RenameChannelModal from '../components/RenameChannelModal'
 import RemoveChannelModal from '../components/RemoveChannelModal'
 import { useTranslation } from 'react-i18next'
+import { cleanText } from '../utils/profanity'
 
 const HomePage = () => {
   const { t } = useTranslation()
@@ -36,7 +37,8 @@ const HomePage = () => {
     initialValues: { body: '' },
     onSubmit: async (values, { resetForm }) => {
       if (!values.body.trim()) return
-      const result = await dispatch(sendMessage({ channelId: currentChannelId, body: values.body }))
+      const cleanedBody = cleanText(values.body)
+      const result = await dispatch(sendMessage({ channelId: currentChannelId, body: cleanedBody }))
       if (sendMessage.fulfilled.match(result)) {
         resetForm()
       }
