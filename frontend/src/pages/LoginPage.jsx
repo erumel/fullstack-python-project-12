@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Formik, Form, Field } from 'formik'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginUser, clearError } from '../features/auth/authSlice'
@@ -49,6 +49,9 @@ const LoginPage = () => {
           <button type="submit" disabled={loading}>
             {loading ? 'Загрузка...' : 'Войти'}
           </button>
+          <p>
+            Нет аккаунта? <Link to="/signup">Регистрация</Link>
+          </p>
         </Form>
       </Formik>
     </div>

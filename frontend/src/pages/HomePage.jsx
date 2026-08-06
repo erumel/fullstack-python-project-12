@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useFormik } from 'formik'
-import { logout } from '../features/auth/authSlice'
 import { fetchChannels, setCurrentChannel } from '../features/channels/channelsSlice'
 import { fetchMessages, sendMessage } from '../features/messages/messagesSlice'
 import useSocket from '../hooks/useSocket'
@@ -78,7 +77,6 @@ const HomePage = () => {
       <main className="chat">
         <header>
           <span>{username}</span>
-          <button type="button" onClick={() => dispatch(logout())}>Выйти</button>
         </header>
 
         <div className="messages">
