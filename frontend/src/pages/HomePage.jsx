@@ -1,14 +1,18 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useFormik } from 'formik'
 import { logout } from '../features/auth/authSlice'
 import { fetchChannels, setCurrentChannel } from '../features/channels/channelsSlice'
-import { fetchMessages } from '../features/messages/messagesSlice'
+import { fetchMessages, sendMessage } from '../features/messages/messagesSlice'
+import useSocket from '../hooks/useSocket'
 
 const HomePage = () => {
   const dispatch = useDispatch()
   const { channels, currentChannelId } = useSelector((state) => state.channels)
-  const { messages } = useSelector((state) => state.messages)
+  const { messages, sending } = useSelector((state) => state.messages)
   const { username } = useSelector((state) => state.auth)
+
+  useSocket()
 
   useEffect(() => {
     dispatch(fetchChannels())
@@ -18,6 +22,15 @@ const HomePage = () => {
   const currentChannelMessages = messages.filter(
     (msg) => msg.channelId === currentChannelId
   )
+
+  const formik = useFormik({
+    initialValues: { body: '' },
+    onSubmit: async (values, { resetForm }) => {
+      if (!values.body.trim()) return
+      await dispatch(sendMessage({ channelId: currentChannelId, body: values.body }))
+      resetForm()
+    },
+  })
 
   return (
     <div className="chat-container">
@@ -54,9 +67,18 @@ const HomePage = () => {
           ))}
         </div>
 
-        <form className="message-form">
-          <input type="text" placeholder="Введите сообщение..." />
-          <button type="submit">Отправить</button>
+        <form className="message-form" onSubmit={formik.handleSubmit}>
+          <input
+            type="text"
+            name="body"
+            placeholder="Введите сообщение..."
+            value={formik.values.body}
+            onChange={formik.handleChange}
+            disabled={sending}
+          />
+          <button type="submit" disabled={sending}>
+            {sending ? 'Отправка...' : 'Отправить'}
+          </button>
         </form>
       </main>
     </div>
