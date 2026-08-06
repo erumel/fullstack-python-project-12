@@ -1,20 +1,21 @@
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import { renameChannel } from '../features/channels/channelsSlice'
 import Modal from './Modal'
 
 const RenameChannelModal = ({ isOpen, onClose, channel }) => {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
-  const channels = useSelector((state) => state.channels.channels)
+  const channels = useSelector(state => state.channels.channels)
 
   const validationSchema = yup.object({
     name: yup
       .string()
-      .min(3, 'От 3 до 20 символов')
-      .max(20, 'От 3 до 20 символов')
-      .notOneOf([], 'Канал уже существует')
-      .required('Обязательное поле'),
+      .min(3, t('modals.addChannel.errors.length'))
+      .max(20, t('modals.addChannel.errors.length'))
+      .required(t('modals.addChannel.errors.required')),
   })
 
   const formik = useFormik({
@@ -22,8 +23,8 @@ const RenameChannelModal = ({ isOpen, onClose, channel }) => {
     enableReinitialize: true,
     validationSchema: validationSchema.shape({
       name: validationSchema.fields.name.notOneOf(
-        channels.filter((c) => c.id !== channel?.id).map((c) => c.name),
-        'Канал уже существует',
+        channels.filter(c => c.id !== channel?.id).map(c => c.name),
+        t('modals.addChannel.errors.exists'),
       ),
     }),
     onSubmit: async (values) => {
@@ -33,7 +34,7 @@ const RenameChannelModal = ({ isOpen, onClose, channel }) => {
   })
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Переименовать канал">
+    <Modal isOpen={isOpen} onClose={onClose} title={t('modals.renameChannel.title')}>
       <form onSubmit={formik.handleSubmit}>
         <input
           name="name"
@@ -47,7 +48,7 @@ const RenameChannelModal = ({ isOpen, onClose, channel }) => {
           <div className="error">{formik.errors.name}</div>
         )}
         <button type="submit" disabled={formik.isSubmitting}>
-          {formik.isSubmitting ? 'Сохранение...' : 'Сохранить'}
+          {formik.isSubmitting ? t('modals.renameChannel.loading') : t('modals.renameChannel.submit')}
         </button>
       </form>
     </Modal>

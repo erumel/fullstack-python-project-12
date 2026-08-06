@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
+import i18n from '../../i18n'
 
 export const fetchMessages = createAsyncThunk(
   'messages/fetchMessages',
@@ -12,7 +13,7 @@ export const fetchMessages = createAsyncThunk(
       return response.data
     }
     catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Ошибка загрузки сообщений')
+      return rejectWithValue(error.response?.data?.message || i18n.t('errors.messages.load'))
     }
   },
 )
@@ -30,7 +31,7 @@ export const sendMessage = createAsyncThunk(
       return response.data
     }
     catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Ошибка отправки')
+      return rejectWithValue(error.response?.data?.message || i18n.t('errors.messages.send'))
     }
   },
 )

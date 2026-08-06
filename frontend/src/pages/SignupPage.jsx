@@ -3,28 +3,30 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Formik, Form, Field } from 'formik'
 import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
-import { signupUser, clearError } from '../features/auth/authSlice'
-
-const validationSchema = yup.object({
-  username: yup
-    .string()
-    .min(3, 'От 3 до 20 символов')
-    .max(20, 'От 3 до 20 символов')
-    .required('Обязательное поле'),
-  password: yup
-    .string()
-    .min(6, 'Не менее 6 символов')
-    .required('Обязательное поле'),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref('password')], 'Пароли должны совпадать')
-    .required('Обязательное поле'),
-})
+import { useTranslation } from 'react-i18next'
+import { signupUser } from '../features/auth/authSlice'
 
 const SignupPage = () => {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { token, loading, error } = useSelector((state) => state.auth)
+  const { token, loading, error } = useSelector(state => state.auth)
+
+  const validationSchema = yup.object({
+    username: yup
+      .string()
+      .min(3, t('signup.errors.usernameLength'))
+      .max(20, t('signup.errors.usernameLength'))
+      .required(t('signup.errors.required')),
+    password: yup
+      .string()
+      .min(6, t('signup.errors.passwordLength'))
+      .required(t('signup.errors.required')),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref('password')], t('signup.errors.passwordsMatch'))
+      .required(t('signup.errors.required')),
+  })
 
   useEffect(() => {
     if (token) {
@@ -38,8 +40,8 @@ const SignupPage = () => {
 
   return (
     <div className="signup-page">
-      <h1>Регистрация</h1>
-      {error && <div className="error">{typeof error === 'string' ? error : error.message}</div>}
+      <h1>{t('signup.title')}</h1>
+      {error && <div className="error">{error}</div>}
       <Formik
         initialValues={{ username: '', password: '', confirmPassword: '' }}
         validationSchema={validationSchema}
@@ -51,8 +53,8 @@ const SignupPage = () => {
               <Field
                 name="username"
                 type="text"
-                placeholder="Имя пользователя"
-                aria-label="Имя пользователя"
+                placeholder={t('signup.username')}
+                aria-label={t('signup.username')}
                 autoComplete="username"
               />
               {errors.username && touched.username && (
@@ -63,8 +65,8 @@ const SignupPage = () => {
               <Field
                 name="password"
                 type="password"
-                placeholder="Пароль"
-                aria-label="Пароль"
+                placeholder={t('signup.password')}
+                aria-label={t('signup.password')}
                 autoComplete="new-password"
               />
               {errors.password && touched.password && (
@@ -75,8 +77,8 @@ const SignupPage = () => {
               <Field
                 name="confirmPassword"
                 type="password"
-                placeholder="Подтверждение пароля"
-                aria-label="Подтверждение пароля"
+                placeholder={t('signup.confirmPassword')}
+                aria-label={t('signup.confirmPassword')}
                 autoComplete="new-password"
               />
               {errors.confirmPassword && touched.confirmPassword && (
@@ -84,13 +86,15 @@ const SignupPage = () => {
               )}
             </div>
             <button type="submit" disabled={loading}>
-              {loading ? 'Регистрация...' : 'Зарегистрироваться'}
+              {loading ? t('signup.loading') : t('signup.submit')}
             </button>
           </Form>
         )}
       </Formik>
       <p>
-        Уже есть аккаунт? <Link to="/login">Войти</Link>
+        {t('signup.hasAccount')}
+        {' '}
+        <Link to="/login">{t('signup.loginLink')}</Link>
       </p>
     </div>
   )

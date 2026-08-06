@@ -7,12 +7,14 @@ import useSocket from '../hooks/useSocket'
 import AddChannelModal from '../components/AddChannelModal'
 import RenameChannelModal from '../components/RenameChannelModal'
 import RemoveChannelModal from '../components/RemoveChannelModal'
+import { useTranslation } from 'react-i18next'
 
 const HomePage = () => {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
-  const { channels, currentChannelId } = useSelector((state) => state.channels)
-  const { messages, sending } = useSelector((state) => state.messages)
-  const { username } = useSelector((state) => state.auth)
+  const { channels, currentChannelId } = useSelector(state => state.channels)
+  const { messages, sending } = useSelector(state => state.messages)
+  const { username } = useSelector(state => state.auth)
 
   const [addModalOpen, setAddModalOpen] = useState(false)
   const [renameChannel, setRenameChannel] = useState(null)
@@ -27,7 +29,7 @@ const HomePage = () => {
   }, [dispatch])
 
   const currentChannelMessages = messages.filter(
-    (msg) => msg.channelId === currentChannelId
+    msg => msg.channelId === currentChannelId,
   )
 
   const formik = useFormik({
@@ -43,14 +45,16 @@ const HomePage = () => {
     <div className="chat-container">
       <aside className="sidebar">
         <div className="sidebar-header">
-          <h3>Каналы</h3>
+          <h3>{t('chat.channels')}</h3>
           <button type="button" onClick={() => setAddModalOpen(true)}>+</button>
         </div>
         <ul>
-          {channels.map((channel) => (
+          {channels.map(channel => (
             <li key={channel.id} className={channel.id === currentChannelId ? 'active' : ''}>
               <button type="button" onClick={() => dispatch(setCurrentChannel(channel.id))}>
-                # {channel.name}
+                #
+                {' '}
+                {channel.name}
               </button>
               {channel.removable && (
                 <div className="channel-menu">
@@ -59,11 +63,23 @@ const HomePage = () => {
                   </button>
                   {menuOpen === channel.id && (
                     <div className="dropdown">
-                      <button type="button" onClick={() => { setRenameChannel(channel); setMenuOpen(null) }}>
-                        Переименовать
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setRenameChannel(channel)
+                          setMenuOpen(null)
+                        }}
+                      >
+                        {t('chat.rename')}
                       </button>
-                      <button type="button" onClick={() => { setRemoveChannel(channel); setMenuOpen(null) }}>
-                        Удалить
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setRemoveChannel(channel)
+                          setMenuOpen(null)
+                        }}
+                      >
+                        {t('chat.remove')}
                       </button>
                     </div>
                   )}
@@ -80,9 +96,11 @@ const HomePage = () => {
         </header>
 
         <div className="messages">
-          {currentChannelMessages.map((msg) => (
+          {currentChannelMessages.map(msg => (
             <div key={msg.id} className="message">
-              <strong>{msg.username}</strong>: {msg.body}
+              <strong>{msg.username}</strong>
+              :
+              {msg.body}
             </div>
           ))}
         </div>
@@ -91,13 +109,13 @@ const HomePage = () => {
           <input
             type="text"
             name="body"
-            placeholder="Введите сообщение..."
+            placeholder={t('chat.inputPlaceholder')}
             value={formik.values.body}
             onChange={formik.handleChange}
             disabled={sending}
           />
           <button type="submit" disabled={sending}>
-            {sending ? 'Отправка...' : 'Отправить'}
+            {sending ? t('chat.sending') : t('chat.send')}
           </button>
         </form>
       </main>

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
+import i18n from '../../i18n'
 
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
@@ -8,8 +9,8 @@ export const loginUser = createAsyncThunk(
       const response = await axios.post('/api/v1/login', credentials)
       return response.data
     }
-    catch (error) {
-      return rejectWithValue(error.response?.data || 'Ошибка авторизации')
+    catch {
+      return rejectWithValue(i18n.t('login.errors.authFailed'))
     }
   },
 )
@@ -22,7 +23,15 @@ export const signupUser = createAsyncThunk(
       return response.data
     }
     catch (error) {
-      return rejectWithValue(error.response?.data || 'Ошибка регистрации')
+      const payload = error.response?.data
+      let message
+      if (payload?.statusCode === 409) {
+        message = i18n.t('signup.errors.userExists')
+      }
+      else {
+        message = payload?.message || i18n.t('signup.errors.userExists')
+      }
+      return rejectWithValue(message)
     }
   },
 )
@@ -64,8 +73,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false
-        const payload = action.payload
-        state.error = typeof payload === 'string' ? payload : payload?.message || 'Неверные имя пользователя или пароль'
+        state.error = action.payload
       })
       .addCase(signupUser.pending, (state) => {
         state.loading = true
@@ -80,16 +88,7 @@ const authSlice = createSlice({
       })
       .addCase(signupUser.rejected, (state, action) => {
         state.loading = false
-        const payload = action.payload
-        if (typeof payload === 'string') {
-          state.error = payload
-        }
-        else if (payload?.statusCode === 409) {
-          state.error = 'Пользователь с таким именем уже существует'
-        }
-        else {
-          state.error = payload?.message || 'Ошибка регистрации'
-        }
+        state.error = action.payload
       })
   },
 })

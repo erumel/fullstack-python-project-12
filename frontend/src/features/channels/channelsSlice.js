@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
+import i18n from '../../i18n'
 
 export const fetchChannels = createAsyncThunk(
   'channels/fetchChannels',
@@ -12,7 +13,7 @@ export const fetchChannels = createAsyncThunk(
       return response.data
     }
     catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Ошибка загрузки каналов')
+      return rejectWithValue(error.response?.data?.message || i18n.t('errors.channels.load'))
     }
   },
 )
@@ -30,7 +31,7 @@ export const addChannel = createAsyncThunk(
       return response.data
     }
     catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Ошибка создания канала')
+      return rejectWithValue(error.response?.data?.message || i18n.t('errors.channels.create'))
     }
   },
 )
@@ -41,12 +42,12 @@ export const removeChannel = createAsyncThunk(
     try {
       const { token } = getState().auth
       await axios.delete(`/api/v1/channels/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+        headers: { Authorization: `Bearer ${token}` } },
+      )
       return id
     }
     catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Ошибка удаления канала')
+      return rejectWithValue(error.response?.data?.message || i18n.t('errors.channels.remove'))
     }
   },
 )
@@ -64,7 +65,7 @@ export const renameChannel = createAsyncThunk(
       return response.data
     }
     catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Ошибка переименования')
+      return rejectWithValue(error.response?.data?.message || i18n.t('errors.channels.rename'))
     }
   },
 )

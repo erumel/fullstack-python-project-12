@@ -2,12 +2,14 @@ import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Formik, Form, Field } from 'formik'
 import { useDispatch, useSelector } from 'react-redux'
-import { loginUser, clearError } from '../features/auth/authSlice'
+import { useTranslation } from 'react-i18next'
+import { loginUser } from '../features/auth/authSlice'
 
 const LoginPage = () => {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { token, loading, error } = useSelector((state) => state.auth)
+  const { token, loading, error } = useSelector(state => state.auth)
 
   useEffect(() => {
     if (token) {
@@ -21,7 +23,7 @@ const LoginPage = () => {
 
   return (
     <div className="login-page">
-      <h1>Войти</h1>
+      <h1>{t('login.title')}</h1>
       {error && <div className="error">{error}</div>}
       <Formik
         initialValues={{ username: '', password: '' }}
@@ -32,8 +34,8 @@ const LoginPage = () => {
             <Field
               name="username"
               type="text"
-              placeholder="Имя пользователя"
-              aria-label="Имя пользователя"
+              placeholder={t('login.username')}
+              aria-label={t('login.username')}
               autoComplete="username"
             />
           </div>
@@ -41,19 +43,21 @@ const LoginPage = () => {
             <Field
               name="password"
               type="password"
-              placeholder="Пароль"
-              aria-label="Пароль"
+              placeholder={t('login.password')}
+              aria-label={t('login.password')}
               autoComplete="current-password"
             />
           </div>
           <button type="submit" disabled={loading}>
-            {loading ? 'Загрузка...' : 'Войти'}
+            {loading ? t('login.loading') : t('login.submit')}
           </button>
-          <p>
-            Нет аккаунта? <Link to="/signup">Регистрация</Link>
-          </p>
         </Form>
       </Formik>
+      <p>
+        {t('login.noAccount')}
+        {' '}
+        <Link to="/signup">{t('login.signupLink')}</Link>
+      </p>
     </div>
   )
 }
