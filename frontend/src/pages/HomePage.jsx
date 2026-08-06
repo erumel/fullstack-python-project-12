@@ -36,8 +36,10 @@ const HomePage = () => {
     initialValues: { body: '' },
     onSubmit: async (values, { resetForm }) => {
       if (!values.body.trim()) return
-      await dispatch(sendMessage({ channelId: currentChannelId, body: values.body }))
-      resetForm()
+      const result = await dispatch(sendMessage({ channelId: currentChannelId, body: values.body }))
+      if (sendMessage.fulfilled.match(result)) {
+        resetForm()
+      }
     },
   })
 

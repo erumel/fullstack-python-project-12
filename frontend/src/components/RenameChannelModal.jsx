@@ -28,8 +28,10 @@ const RenameChannelModal = ({ isOpen, onClose, channel }) => {
       ),
     }),
     onSubmit: async (values) => {
-      await dispatch(renameChannel({ id: channel.id, name: values.name }))
-      onClose()
+      const result = await dispatch(renameChannel({ id: channel.id, name: values.name }))
+      if (renameChannel.fulfilled.match(result)) {
+        onClose()
+      }
     },
   })
 

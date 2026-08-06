@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 import i18n from '../../i18n'
+import { notifySuccess, notifyError } from '../../utils/toast'
 
 export const fetchChannels = createAsyncThunk(
   'channels/fetchChannels',
@@ -12,8 +13,8 @@ export const fetchChannels = createAsyncThunk(
       })
       return response.data
     }
-    catch (error) {
-      return rejectWithValue(error.response?.data?.message || i18n.t('errors.channels.load'))
+    catch {
+      return rejectWithValue(i18n.t('errors.channels.load'))
     }
   },
 )
@@ -30,8 +31,8 @@ export const addChannel = createAsyncThunk(
       )
       return response.data
     }
-    catch (error) {
-      return rejectWithValue(error.response?.data?.message || i18n.t('errors.channels.create'))
+    catch {
+      return rejectWithValue(i18n.t('errors.channels.create'))
     }
   },
 )
@@ -42,12 +43,12 @@ export const removeChannel = createAsyncThunk(
     try {
       const { token } = getState().auth
       await axios.delete(`/api/v1/channels/${id}`, {
-        headers: { Authorization: `Bearer ${token}` } },
-      )
+        headers: { Authorization: `Bearer ${token}` },
+      })
       return id
     }
-    catch (error) {
-      return rejectWithValue(error.response?.data?.message || i18n.t('errors.channels.remove'))
+    catch {
+      return rejectWithValue(i18n.t('errors.channels.remove'))
     }
   },
 )
@@ -64,8 +65,8 @@ export const renameChannel = createAsyncThunk(
       )
       return response.data
     }
-    catch (error) {
-      return rejectWithValue(error.response?.data?.message || i18n.t('errors.channels.rename'))
+    catch {
+      return rejectWithValue(i18n.t('errors.channels.rename'))
     }
   },
 )
@@ -99,22 +100,38 @@ const channelsSlice = createSlice({
       .addCase(fetchChannels.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload
+        notifyError('toasts.networkError')
       })
       .addCase(addChannel.fulfilled, (state, action) => {
         state.channels.push(action.payload)
         state.currentChannelId = action.payload.id
+        notifySuccess('toasts.channelCreated')
+      })
+      .addCase(addChannel.rejected, (state, action) => {
+        state.error = action.payload
+        notifyError('toasts.networkError')
       })
       .addCase(removeChannel.fulfilled, (state, action) => {
         state.channels = state.channels.filter(c => c.id !== action.payload)
         if (state.currentChannelId === action.payload) {
           state.currentChannelId = state.channels[0]?.id || null
         }
+        notifySuccess('toasts.channelRemoved')
+      })
+      .addCase(removeChannel.rejected, (state, action) => {
+        state.error = action.payload
+        notifyError('toasts.networkError')
       })
       .addCase(renameChannel.fulfilled, (state, action) => {
         const channel = state.channels.find(c => c.id === action.payload.id)
         if (channel) {
           channel.name = action.payload.name
         }
+        notifySuccess('toasts.channelRenamed')
+      })
+      .addCase(renameChannel.rejected, (state, action) => {
+        state.error = action.payload
+        notifyError('toasts.networkError')
       })
   },
 })

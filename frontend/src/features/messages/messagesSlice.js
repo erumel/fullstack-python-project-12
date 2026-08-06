@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 import i18n from '../../i18n'
+import { notifyError } from '../../utils/toast'
 
 export const fetchMessages = createAsyncThunk(
   'messages/fetchMessages',
@@ -12,8 +13,8 @@ export const fetchMessages = createAsyncThunk(
       })
       return response.data
     }
-    catch (error) {
-      return rejectWithValue(error.response?.data?.message || i18n.t('errors.messages.load'))
+    catch {
+      return rejectWithValue(i18n.t('errors.messages.load'))
     }
   },
 )
@@ -30,8 +31,8 @@ export const sendMessage = createAsyncThunk(
       )
       return response.data
     }
-    catch (error) {
-      return rejectWithValue(error.response?.data?.message || i18n.t('errors.messages.send'))
+    catch {
+      return rejectWithValue(i18n.t('errors.messages.send'))
     }
   },
 )
@@ -62,6 +63,7 @@ const messagesSlice = createSlice({
       .addCase(fetchMessages.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload
+        notifyError('toasts.networkError')
       })
       .addCase(sendMessage.pending, (state) => {
         state.sending = true
@@ -73,6 +75,7 @@ const messagesSlice = createSlice({
       .addCase(sendMessage.rejected, (state, action) => {
         state.sending = false
         state.error = action.payload
+        notifyError('toasts.networkError')
       })
   },
 })

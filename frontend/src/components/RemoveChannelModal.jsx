@@ -8,8 +8,10 @@ const RemoveChannelModal = ({ isOpen, onClose, channel }) => {
   const dispatch = useDispatch()
 
   const handleRemove = async () => {
-    await dispatch(removeChannel(channel.id))
-    onClose()
+    const result = await dispatch(removeChannel(channel.id))
+    if (removeChannel.fulfilled.match(result)) {
+      onClose()
+    }
   }
 
   return (

@@ -26,9 +26,11 @@ const AddChannelModal = ({ isOpen, onClose }) => {
       ),
     }),
     onSubmit: async (values, { resetForm }) => {
-      await dispatch(addChannel(values.name))
-      resetForm()
-      onClose()
+      const result = await dispatch(addChannel(values.name))
+      if (addChannel.fulfilled.match(result)) {
+        resetForm()
+        onClose()
+      }
     },
   })
 

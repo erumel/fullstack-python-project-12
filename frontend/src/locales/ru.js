@@ -84,5 +84,12 @@ export default {
         send: 'Ошибка отправки сообщения',
       },
     },
+    toasts: {
+      channelCreated: 'Канал создан',
+      channelRenamed: 'Канал переименован',
+      channelRemoved: 'Канал удалён',
+      networkError: 'Ошибка соединения',
+      dataError: 'Ошибка загрузки данных',
+    },
   },
 }
