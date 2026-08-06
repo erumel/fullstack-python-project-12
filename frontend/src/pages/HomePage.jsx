@@ -5,12 +5,20 @@ import { logout } from '../features/auth/authSlice'
 import { fetchChannels, setCurrentChannel } from '../features/channels/channelsSlice'
 import { fetchMessages, sendMessage } from '../features/messages/messagesSlice'
 import useSocket from '../hooks/useSocket'
+import AddChannelModal from '../components/AddChannelModal'
+import RenameChannelModal from '../components/RenameChannelModal'
+import RemoveChannelModal from '../components/RemoveChannelModal'
 
 const HomePage = () => {
   const dispatch = useDispatch()
   const { channels, currentChannelId } = useSelector((state) => state.channels)
   const { messages, sending } = useSelector((state) => state.messages)
   const { username } = useSelector((state) => state.auth)
+
+  const [addModalOpen, setAddModalOpen] = useState(false)
+  const [renameChannel, setRenameChannel] = useState(null)
+  const [removeChannel, setRemoveChannel] = useState(null)
+  const [menuOpen, setMenuOpen] = useState(null)
 
   useSocket()
 
@@ -35,19 +43,33 @@ const HomePage = () => {
   return (
     <div className="chat-container">
       <aside className="sidebar">
-        <h3>Каналы</h3>
+        <div className="sidebar-header">
+          <h3>Каналы</h3>
+          <button type="button" onClick={() => setAddModalOpen(true)}>+</button>
+        </div>
         <ul>
           {channels.map((channel) => (
-            <li
-              key={channel.id}
-              className={channel.id === currentChannelId ? 'active' : ''}
-            >
-              <button
-                type="button"
-                onClick={() => dispatch(setCurrentChannel(channel.id))}
-              >
+            <li key={channel.id} className={channel.id === currentChannelId ? 'active' : ''}>
+              <button type="button" onClick={() => dispatch(setCurrentChannel(channel.id))}>
                 # {channel.name}
               </button>
+              {channel.removable && (
+                <div className="channel-menu">
+                  <button type="button" onClick={() => setMenuOpen(menuOpen === channel.id ? null : channel.id)}>
+                    ⋯
+                  </button>
+                  {menuOpen === channel.id && (
+                    <div className="dropdown">
+                      <button type="button" onClick={() => { setRenameChannel(channel); setMenuOpen(null) }}>
+                        Переименовать
+                      </button>
+                      <button type="button" onClick={() => { setRemoveChannel(channel); setMenuOpen(null) }}>
+                        Удалить
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </li>
           ))}
         </ul>
@@ -81,6 +103,10 @@ const HomePage = () => {
           </button>
         </form>
       </main>
+
+      <AddChannelModal isOpen={addModalOpen} onClose={() => setAddModalOpen(false)} />
+      <RenameChannelModal isOpen={!!renameChannel} onClose={() => setRenameChannel(null)} channel={renameChannel} />
+      <RemoveChannelModal isOpen={!!removeChannel} onClose={() => setRemoveChannel(null)} channel={removeChannel} />
     </div>
   )
 }
