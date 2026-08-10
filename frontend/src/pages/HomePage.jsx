@@ -164,7 +164,7 @@ const HomePage = () => {
                 />
               </Col>
               <Col xs="auto">
-                <Button type="submit" disabled={sending}>
+                <Button type="submit">
                   {sending ? t('chat.sending') : t('chat.send')}
                 </Button>
               </Col>
