@@ -68,6 +68,7 @@ const SignupPage = () => {
                       name="username"
                       type="text"
                       placeholder={t('signup.username')}
+                      aria-label={t('signup.username')}
                       autoComplete="username"
                       required
                       minLength={3}
@@ -81,6 +82,7 @@ const SignupPage = () => {
                       name="password"
                       type="password"
                       placeholder={t('signup.password')}
+                      aria-label={t('signup.password')}
                       autoComplete="new-password"
                       required
                       minLength={6}
@@ -93,6 +95,7 @@ const SignupPage = () => {
                       name="confirmPassword"
                       type="password"
                       placeholder={t('signup.confirmPassword')}
+                      aria-label={t('signup.confirmPassword')}
                       autoComplete="new-password"
                       required
                       minLength={6}
