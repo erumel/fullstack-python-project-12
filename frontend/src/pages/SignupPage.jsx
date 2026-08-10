@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Formik, Form, Field } from 'formik'
+import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { Container, Card, Button, Row, Col } from 'react-bootstrap'
@@ -15,6 +16,22 @@ const SignupPage = () => {
   const { token, loading, error, errorCode } = useSelector(state => state.auth)
 
   const [passwordError, setPasswordError] = useState(false)
+
+  const validationSchema = yup.object({
+    username: yup
+      .string()
+      .min(3, t('signup.errors.usernameLength'))
+      .max(20, t('signup.errors.usernameLength'))
+      .required(t('signup.errors.required')),
+    password: yup
+      .string()
+      .min(6, t('signup.errors.passwordLength'))
+      .required(t('signup.errors.required')),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref('password')], t('signup.errors.passwordsMatch'))
+      .required(t('signup.errors.required')),
+  })
 
   useEffect(() => {
     if (token) navigate('/', { replace: true })
@@ -54,6 +71,7 @@ const SignupPage = () => {
 
               <Formik
                 initialValues={{ username: '', password: '', confirmPassword: '' }}
+                validationSchema={validationSchema}
                 onSubmit={(values) => {
                   if (values.password !== values.confirmPassword) {
                     setPasswordError(true)
@@ -62,57 +80,61 @@ const SignupPage = () => {
                   dispatch(signupUser({ username: values.username, password: values.password }))
                 }}
               >
-                <Form>
-                  <div className="mb-3">
-                    <label htmlFor="username" className="visually-hidden">{t('signup.username')}</label>
-                    <Field
-                      id="username"
-                      name="username"
-                      type="text"
-                      placeholder={t('signup.username')}
-                      aria-label={t('signup.username')}
-                      autoComplete="username"
-                      required
-                      minLength={3}
-                      maxLength={20}
-                      className={`form-control ${error && errorCode === 'USER_EXISTS' ? 'is-invalid' : ''}`}
-                    />
-                  </div>
+                {({ errors, touched }) => (
+                  <Form>
+                    <div className="mb-3">
+                      <label htmlFor="username" className="visually-hidden">{t('signup.username')}</label>
+                      <Field
+                        id="username"
+                        name="username"
+                        type="text"
+                        placeholder={t('signup.username')}
+                        aria-label={t('signup.username')}
+                        autoComplete="username"
+                        className={`form-control ${(errors.username && touched.username) || (error && errorCode === 'USER_EXISTS') ? 'is-invalid' : ''}`}
+                      />
+                      {errors.username && touched.username && (
+                        <div className="text-danger small mt-1">{errors.username}</div>
+                      )}
+                    </div>
 
-                  <div className="mb-3">
-                    <label htmlFor="password" className="visually-hidden">{t('signup.password')}</label>
-                    <Field
-                      id="password"
-                      name="password"
-                      type="password"
-                      placeholder={t('signup.password')}
-                      aria-label={t('signup.password')}
-                      autoComplete="new-password"
-                      required
-                      minLength={6}
-                      className={`form-control ${passwordError ? 'is-invalid' : ''}`}
-                    />
-                  </div>
+                    <div className="mb-3">
+                      <label htmlFor="password" className="visually-hidden">{t('signup.password')}</label>
+                      <Field
+                        id="password"
+                        name="password"
+                        type="password"
+                        placeholder={t('signup.password')}
+                        aria-label={t('signup.password')}
+                        autoComplete="new-password"
+                        className={`form-control ${(errors.password && touched.password) || passwordError ? 'is-invalid' : ''}`}
+                      />
+                      {errors.password && touched.password && (
+                        <div className="text-danger small mt-1">{errors.password}</div>
+                      )}
+                    </div>
 
-                  <div className="mb-3">
-                    <label htmlFor="confirmPassword" className="visually-hidden">{t('signup.confirmPassword')}</label>
-                    <Field
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type="password"
-                      placeholder={t('signup.confirmPassword')}
-                      aria-label={t('signup.confirmPassword')}
-                      autoComplete="new-password"
-                      required
-                      minLength={6}
-                      className={`form-control ${passwordError ? 'is-invalid' : ''}`}
-                    />
-                  </div>
+                    <div className="mb-3">
+                      <label htmlFor="confirmPassword" className="visually-hidden">{t('signup.confirmPassword')}</label>
+                      <Field
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        type="password"
+                        placeholder={t('signup.confirmPassword')}
+                        aria-label={t('signup.confirmPassword')}
+                        autoComplete="new-password"
+                        className={`form-control ${(errors.confirmPassword && touched.confirmPassword) || passwordError ? 'is-invalid' : ''}`}
+                      />
+                      {errors.confirmPassword && touched.confirmPassword && (
+                        <div className="text-danger small mt-1">{errors.confirmPassword}</div>
+                      )}
+                    </div>
 
-                  <Button type="submit" variant="primary" className="w-100" disabled={loading}>
-                    {loading ? t('signup.loading') : t('signup.submit')}
-                  </Button>
-                </Form>
+                    <Button type="submit" variant="primary" className="w-100" disabled={loading}>
+                      {loading ? t('signup.loading') : t('signup.submit')}
+                    </Button>
+                  </Form>
+                )}
               </Formik>
 
               <p className="text-center mt-3">
