@@ -95,10 +95,11 @@ const HomePage = () => {
             <ListGroup>
               {channels.map(channel => (
                 <ListGroup.Item
+                  as="button"
                   key={channel.id}
                   active={channel.id === currentChannelId}
                   onClick={() => dispatch(setCurrentChannel(channel.id))}
-                  className="d-flex justify-content-between align-items-center"
+                  className="d-flex justify-content-between align-items-center text-start w-100"
                   style={{ cursor: 'pointer' }}
                 >
                   #
