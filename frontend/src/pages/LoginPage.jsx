@@ -45,10 +45,13 @@ const LoginPage = () => {
               >
                 <Form>
                   <div className="mb-3">
+  <label htmlFor="username" className="visually-hidden">{t('login.username')}</label>
                     <Field
+                      id="username"
                       name="username"
                       type="text"
                       placeholder={t('login.username')}
+                      aria-label={t('login.username')}
                       autoComplete="username"
                       required
                       className={`form-control ${error ? 'is-invalid' : ''}`}
@@ -56,10 +59,13 @@ const LoginPage = () => {
                   </div>
 
                   <div className="mb-3">
+                    <label htmlFor="password" className="visually-hidden">{t('login.password')}</label>
                     <Field
+                      id="password"
                       name="password"
                       type="password"
                       placeholder={t('login.password')}
+                      aria-label={t('login.password')}
                       autoComplete="current-password"
                       required
                       className={`form-control ${error ? 'is-invalid' : ''}`}
