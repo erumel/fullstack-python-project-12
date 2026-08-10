@@ -5,10 +5,6 @@ A simplified Slack-like chat application.
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/erumel/fullstack-python-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/erumel/fullstack-python-project-12/actions)
 
-## Deploy
-
-The application is available at: [https://your-app.onrender.com](https://your-app.onrender.com)
-
 ## Technologies
 
 - **Frontend:** React 19, Redux Toolkit, React Router 7, Formik, Yup, Socket.IO
