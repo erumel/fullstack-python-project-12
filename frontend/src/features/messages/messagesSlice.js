@@ -21,12 +21,12 @@ export const fetchMessages = createAsyncThunk(
 
 export const sendMessage = createAsyncThunk(
   'messages/sendMessage',
-  async ({ channelId, body }, { getState, rejectWithValue }) => {
+  async ({ channelId, body, username }, { getState, rejectWithValue }) => {
     try {
       const { token } = getState().auth
       const response = await axios.post(
         '/api/v1/messages',
-        { channelId, body },
+        { channelId, body, username },
         { headers: { Authorization: `Bearer ${token}` } },
       )
       return response.data
@@ -63,7 +63,6 @@ const messagesSlice = createSlice({
       .addCase(fetchMessages.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload
-        notifyError('toasts.networkError')
       })
       .addCase(sendMessage.pending, (state) => {
         state.sending = true

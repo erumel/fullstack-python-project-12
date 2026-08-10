@@ -1,3 +1,4 @@
+import { Navbar, Container, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
@@ -9,14 +10,18 @@ const Header = () => {
   const token = useSelector(state => state.auth.token)
 
   return (
-    <header className="app-header">
-      <Link to="/">{t('header.title')}</Link>
-      {token && (
-        <button type="button" onClick={() => dispatch(logout())}>
-          {t('header.logout')}
-        </button>
-      )}
-    </header>
+    <Navbar bg="light" className="border-bottom">
+      <Container>
+        <Navbar.Brand as={Link} to="/">{t('header.title')}</Navbar.Brand>
+        <div className="ms-auto">
+          {token && (
+            <Button variant="outline-primary" size="sm" onClick={() => dispatch(logout())} className="fs-6">
+              {t('header.logout')}
+            </Button>
+          )}
+        </div>
+      </Container>
+    </Navbar>
   )
 }
 

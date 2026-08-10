@@ -10,17 +10,25 @@ const useSocket = () => {
   useEffect(() => {
     if (!token) return
 
-    const socket = io('/', {
-      auth: { token },
-      transports: ['websocket'],
-    })
+    let socket
 
-    socket.on('newMessage', (message) => {
-      dispatch(addMessage(message))
-    })
+    try {
+      socket = io('/', {
+        auth: { token },
+        transports: ['websocket'],
+        reconnectionAttempts: 3,
+      })
+
+      socket.on('newMessage', (message) => {
+        dispatch(addMessage(message))
+      })
+    }
+    catch (err) {
+      console.error('Socket connection error:', err)
+    }
 
     return () => {
-      socket.disconnect()
+      socket?.disconnect()
     }
   }, [dispatch, token])
 }

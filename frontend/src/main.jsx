@@ -7,8 +7,8 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import store from './app/store'
 import App from './App'
-import './index.css'
 import './i18n'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 const rollbarConfig = {
   accessToken: import.meta.env.VITE_ROLLBAR_ACCESS_TOKEN,
@@ -16,7 +16,7 @@ const rollbarConfig = {
   captureUncaught: true,
   captureUnhandledRejections: true,
 }
-console.log('Rollbar token:', import.meta.env.VITE_ROLLBAR_ACCESS_TOKEN)
+
 const FallbackUI = () => {
   const { t } = useTranslation()
   return (
@@ -33,7 +33,14 @@ createRoot(document.getElementById('root')).render(
       <ErrorBoundary fallbackUI={FallbackUI}>
         <ReduxProvider store={store}>
           <App />
-          <ToastContainer />
+          <ToastContainer
+            position="top-right"
+            autoClose={2000}
+            hideProgressBar
+            newestOnTop
+            closeOnClick
+            pauseOnHover
+          />
         </ReduxProvider>
       </ErrorBoundary>
     </Provider>

@@ -6,14 +6,13 @@ export default {
     },
     login: {
       title: 'Войти',
-      username: 'Имя пользователя',
+      username: 'Ваш ник',
       password: 'Пароль',
       submit: 'Войти',
       loading: 'Загрузка...',
       noAccount: 'Нет аккаунта?',
       signupLink: 'Регистрация',
       errors: {
-        required: 'Обязательное поле',
         authFailed: 'Неверные имя пользователя или пароль',
       },
     },
@@ -27,11 +26,8 @@ export default {
       hasAccount: 'Уже есть аккаунт?',
       loginLink: 'Войти',
       errors: {
-        usernameLength: 'От 3 до 20 символов',
-        passwordLength: 'Не менее 6 символов',
-        passwordsMatch: 'Пароли должны совпадать',
-        required: 'Обязательное поле',
         userExists: 'Пользователь с таким именем уже существует',
+        passwordsMatch: 'Пароли не совпадают',
       },
     },
     chat: {
@@ -43,6 +39,9 @@ export default {
       send: 'Отправить',
       sending: 'Отправка...',
       messages: 'Нет сообщений',
+      messagesCount_one: '{{count}} сообщение',
+      messagesCount_few: '{{count}} сообщения',
+      messagesCount_many: '{{count}} сообщений',
     },
     modals: {
       addChannel: {
@@ -74,6 +73,7 @@ export default {
       message: 'Страница не найдена',
     },
     errors: {
+      network: 'Ошибка соединения с сервером',
       fallback: {
         title: 'Упс, что-то пошло не так.',
         message: 'Мы уже уведомлены и работаем над исправлением.',

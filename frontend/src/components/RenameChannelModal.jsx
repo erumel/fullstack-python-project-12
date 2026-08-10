@@ -2,6 +2,7 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
+import { Form, Button, Alert } from 'react-bootstrap'
 import { renameChannel } from '../features/channels/channelsSlice'
 import Modal from './Modal'
 import { cleanText, hasBadWords } from '../utils/profanity'
@@ -30,7 +31,6 @@ const RenameChannelModal = ({ isOpen, onClose, channel }) => {
         )
         .test('no-bad-words', t('modals.addChannel.errors.badWords'), value => !hasBadWords(value || '')),
     }),
-
     onSubmit: async (values) => {
       const cleanedName = cleanText(values.name)
       const result = await dispatch(renameChannel({ id: channel.id, name: cleanedName }))
@@ -42,22 +42,32 @@ const RenameChannelModal = ({ isOpen, onClose, channel }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t('modals.renameChannel.title')}>
-      <form onSubmit={formik.handleSubmit}>
-        <input
-          name="name"
-          type="text"
-          value={formik.values.name}
-          onChange={formik.handleChange}
-          disabled={formik.isSubmitting}
-          autoFocus
-        />
-        {formik.errors.name && formik.touched.name && (
-          <div className="error">{formik.errors.name}</div>
-        )}
-        <button type="submit" disabled={formik.isSubmitting}>
-          {formik.isSubmitting ? t('modals.renameChannel.loading') : t('modals.renameChannel.submit')}
-        </button>
-      </form>
+      <Form onSubmit={formik.handleSubmit}>
+        <Form.Group className="mb-3">
+          <Form.Control
+            name="name"
+            type="text"
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            disabled={formik.isSubmitting}
+            autoFocus
+            isInvalid={formik.errors.name && formik.touched.name}
+          />
+          {formik.errors.name && formik.touched.name && (
+            <Alert variant="danger" className="mt-2 py-1">
+              {formik.errors.name}
+            </Alert>
+          )}
+        </Form.Group>
+        <div className="d-flex justify-content-end gap-2">
+          <Button variant="secondary" onClick={onClose}>
+            Отмена
+          </Button>
+          <Button type="submit" variant="primary" disabled={formik.isSubmitting}>
+            {formik.isSubmitting ? t('modals.renameChannel.loading') : t('modals.renameChannel.submit')}
+          </Button>
+        </div>
+      </Form>
     </Modal>
   )
 }

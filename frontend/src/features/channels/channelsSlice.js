@@ -100,7 +100,6 @@ const channelsSlice = createSlice({
       .addCase(fetchChannels.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload
-        notifyError('toasts.networkError')
       })
       .addCase(addChannel.fulfilled, (state, action) => {
         state.channels.push(action.payload)

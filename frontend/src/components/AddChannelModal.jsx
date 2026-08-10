@@ -1,6 +1,7 @@
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
+import { Form, Button } from 'react-bootstrap'
 import { addChannel } from '../features/channels/channelsSlice'
 import Modal from './Modal'
 import { useTranslation } from 'react-i18next'
@@ -8,6 +9,9 @@ import { cleanText, hasBadWords } from '../utils/profanity'
 
 const AddChannelModal = ({ isOpen, onClose }) => {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const channels = useSelector(state => state.channels.channels)
+
   const validationSchema = yup.object({
     name: yup
       .string()
@@ -15,8 +19,6 @@ const AddChannelModal = ({ isOpen, onClose }) => {
       .max(20, t('modals.addChannel.errors.length'))
       .required(t('modals.addChannel.errors.required')),
   })
-  const dispatch = useDispatch()
-  const channels = useSelector(state => state.channels.channels)
 
   const formik = useFormik({
     initialValues: { name: '' },
@@ -25,7 +27,6 @@ const AddChannelModal = ({ isOpen, onClose }) => {
         .notOneOf(channels.map(c => c.name), t('modals.addChannel.errors.exists'))
         .test('no-bad-words', t('modals.addChannel.errors.badWords'), value => !hasBadWords(value || '')),
     }),
-
     onSubmit: async (values, { resetForm }) => {
       const cleanedName = cleanText(values.name)
       const result = await dispatch(addChannel(cleanedName))
@@ -38,23 +39,31 @@ const AddChannelModal = ({ isOpen, onClose }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t('modals.addChannel.title')}>
-      <form onSubmit={formik.handleSubmit}>
-        <input
-          name="name"
-          type="text"
-          placeholder={t('modals.addChannel.placeholder')}
-          value={formik.values.name}
-          onChange={formik.handleChange}
-          disabled={formik.isSubmitting}
-          autoFocus
-        />
-        {formik.errors.name && formik.touched.name && (
-          <div className="error">{formik.errors.name}</div>
-        )}
-        <button type="submit" disabled={formik.isSubmitting}>
-          {formik.isSubmitting ? t('modals.addChannel.loading') : t('modals.addChannel.submit')}
-        </button>
-      </form>
+      <Form onSubmit={formik.handleSubmit}>
+        <Form.Group className="mb-3">
+          <Form.Control
+            name="name"
+            type="text"
+            placeholder={t('modals.addChannel.placeholder')}
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            disabled={formik.isSubmitting}
+            autoFocus
+            isInvalid={formik.errors.name && formik.touched.name}
+          />
+          {formik.errors.name && formik.touched.name && (
+            <div className="text-danger mt-2 small">{formik.errors.name}</div>
+          )}
+        </Form.Group>
+        <div className="d-flex justify-content-end gap-2">
+          <Button variant="secondary" onClick={onClose}>
+            Отмена
+          </Button>
+          <Button type="submit" variant="primary" disabled={formik.isSubmitting}>
+            {formik.isSubmitting ? t('modals.addChannel.loading') : t('modals.addChannel.submit')}
+          </Button>
+        </div>
+      </Form>
     </Modal>
   )
 }

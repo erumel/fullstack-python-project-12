@@ -9,8 +9,23 @@ export const loginUser = createAsyncThunk(
       const response = await axios.post('/api/v1/login', credentials)
       return response.data
     }
-    catch {
-      return rejectWithValue(i18n.t('login.errors.authFailed'))
+    catch (err) {
+      if (err.response) {
+        if (err.response.status === 401) {
+          return rejectWithValue({
+            message: i18n.t('login.errors.authFailed'),
+            code: 'AUTH_FAILED',
+          })
+        }
+        return rejectWithValue({
+          message: i18n.t('errors.network'),
+          code: 'NETWORK_ERROR',
+        })
+      }
+      return rejectWithValue({
+        message: i18n.t('errors.network'),
+        code: 'NETWORK_ERROR',
+      })
     }
   },
 )
@@ -22,16 +37,23 @@ export const signupUser = createAsyncThunk(
       const response = await axios.post('/api/v1/signup', credentials)
       return response.data
     }
-    catch (error) {
-      const payload = error.response?.data
-      let message
-      if (payload?.statusCode === 409) {
-        message = i18n.t('signup.errors.userExists')
+    catch (err) {
+      if (err.response) {
+        if (err.response.status === 409) {
+          return rejectWithValue({
+            message: i18n.t('signup.errors.userExists'),
+            code: 'USER_EXISTS',
+          })
+        }
+        return rejectWithValue({
+          message: i18n.t('errors.network'),
+          code: 'NETWORK_ERROR',
+        })
       }
-      else {
-        message = payload?.message || i18n.t('signup.errors.userExists')
-      }
-      return rejectWithValue(message)
+      return rejectWithValue({
+        message: i18n.t('errors.network'),
+        code: 'NETWORK_ERROR',
+      })
     }
   },
 )
@@ -46,6 +68,7 @@ const authSlice = createSlice({
     username,
     loading: false,
     error: null,
+    errorCode: null,
   },
   reducers: {
     logout: (state) => {
@@ -56,6 +79,7 @@ const authSlice = createSlice({
     },
     clearError: (state) => {
       state.error = null
+      state.errorCode = null
     },
   },
   extraReducers: (builder) => {
@@ -63,6 +87,7 @@ const authSlice = createSlice({
       .addCase(loginUser.pending, (state) => {
         state.loading = true
         state.error = null
+        state.errorCode = null
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false
@@ -73,11 +98,13 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false
-        state.error = action.payload
+        state.error = action.payload.message
+        state.errorCode = action.payload.code
       })
       .addCase(signupUser.pending, (state) => {
         state.loading = true
         state.error = null
+        state.errorCode = null
       })
       .addCase(signupUser.fulfilled, (state, action) => {
         state.loading = false
@@ -88,7 +115,8 @@ const authSlice = createSlice({
       })
       .addCase(signupUser.rejected, (state, action) => {
         state.loading = false
-        state.error = action.payload
+        state.error = action.payload.message
+        state.errorCode = action.payload.code
       })
   },
 })

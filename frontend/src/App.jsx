@@ -11,22 +11,26 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Header />
-      <Routes>
-        <Route
-          path="/"
-          element={token ? <HomePage /> : <Navigate to="/login" replace />}
-        />
-        <Route
-          path="/login"
-          element={token ? <Navigate to="/" replace /> : <LoginPage />}
-        />
-        <Route
-          path="/signup"
-          element={token ? <Navigate to="/" replace /> : <SignupPage />}
-        />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+      <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Header />
+        <div style={{ flex: 1, overflow: 'hidden' }}>
+          <Routes>
+            <Route
+              path="/"
+              element={token ? <HomePage /> : <Navigate to="/login" replace />}
+            />
+            <Route
+              path="/login"
+              element={token ? <Navigate to="/" replace /> : <LoginPage />}
+            />
+            <Route
+              path="/signup"
+              element={token ? <Navigate to="/" replace /> : <SignupPage />}
+            />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </div>
+      </div>
     </BrowserRouter>
   )
 }

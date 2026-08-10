@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
+import { Button } from 'react-bootstrap'
 import { removeChannel } from '../features/channels/channelsSlice'
 import Modal from './Modal'
 
@@ -23,8 +24,14 @@ const RemoveChannelModal = ({ isOpen, onClose, channel }) => {
         {channel?.name}
         ?
       </p>
-      <button type="button" onClick={onClose}>{t('modals.removeChannel.cancel')}</button>
-      <button type="button" onClick={handleRemove}>{t('modals.removeChannel.submit')}</button>
+      <div className="d-flex justify-content-end gap-2">
+        <Button variant="secondary" onClick={onClose}>
+          {t('modals.removeChannel.cancel')}
+        </Button>
+        <Button variant="danger" onClick={handleRemove}>
+          {t('modals.removeChannel.submit')}
+        </Button>
+      </div>
     </Modal>
   )
 }
