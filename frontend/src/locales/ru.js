@@ -26,7 +26,7 @@ export default {
       hasAccount: 'Уже есть аккаунт?',
       loginLink: 'Войти',
       errors: {
-        userExists: 'Пользователь с таким именем уже существует',
+        userExists: 'Такой пользователь уже существует',
         passwordsMatch: 'Пароли не совпадают',
       },
     },
