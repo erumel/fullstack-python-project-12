@@ -64,50 +64,50 @@ const SignupPage = () => {
               >
                 <Form>
                   <div className="mb-3">
-  <label htmlFor="username" className="visually-hidden">{t('signup.username')}</label>
-                  <Field
-                    id="username"
-                    name="username"
-                    type="text"
-                    placeholder={t('signup.username')}
-                    aria-label={t('signup.username')}
-                    autoComplete="username"
-                    required
-                    minLength={3}
-                    maxLength={20}
-                    className={`form-control ${error && errorCode === 'USER_EXISTS' ? 'is-invalid' : ''}`}
-                  />
-                </div>
+                    <label htmlFor="username" className="visually-hidden">{t('signup.username')}</label>
+                    <Field
+                      id="username"
+                      name="username"
+                      type="text"
+                      placeholder={t('signup.username')}
+                      aria-label={t('signup.username')}
+                      autoComplete="username"
+                      required
+                      minLength={3}
+                      maxLength={20}
+                      className={`form-control ${error && errorCode === 'USER_EXISTS' ? 'is-invalid' : ''}`}
+                    />
+                  </div>
 
-                <div className="mb-3">
-                  <label htmlFor="password" className="visually-hidden">{t('signup.password')}</label>
-                  <Field
-                    id="password"
-                    name="password"
-                    type="password"
-                    placeholder={t('signup.password')}
-                    aria-label={t('signup.password')}
-                    autoComplete="new-password"
-                    required
-                    minLength={6}
-                    className={`form-control ${passwordError ? 'is-invalid' : ''}`}
-                  />
-                </div>
+                  <div className="mb-3">
+                    <label htmlFor="password" className="visually-hidden">{t('signup.password')}</label>
+                    <Field
+                      id="password"
+                      name="password"
+                      type="password"
+                      placeholder={t('signup.password')}
+                      aria-label={t('signup.password')}
+                      autoComplete="new-password"
+                      required
+                      minLength={6}
+                      className={`form-control ${passwordError ? 'is-invalid' : ''}`}
+                    />
+                  </div>
 
-                <div className="mb-3">
-                  <label htmlFor="confirmPassword" className="visually-hidden">{t('signup.confirmPassword')}</label>
-                  <Field
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    placeholder={t('signup.confirmPassword')}
-                    aria-label={t('signup.confirmPassword')}
-                    autoComplete="new-password"
-                    required
-                    minLength={6}
-                    className={`form-control ${passwordError ? 'is-invalid' : ''}`}
-                  />
-                </div>
+                  <div className="mb-3">
+                    <label htmlFor="confirmPassword" className="visually-hidden">{t('signup.confirmPassword')}</label>
+                    <Field
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type="password"
+                      placeholder={t('signup.confirmPassword')}
+                      aria-label={t('signup.confirmPassword')}
+                      autoComplete="new-password"
+                      required
+                      minLength={6}
+                      className={`form-control ${passwordError ? 'is-invalid' : ''}`}
+                    />
+                  </div>
 
                   <Button type="submit" variant="primary" className="w-100" disabled={loading}>
                     {loading ? t('signup.loading') : t('signup.submit')}

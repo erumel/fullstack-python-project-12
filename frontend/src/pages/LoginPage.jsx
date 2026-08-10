@@ -45,7 +45,7 @@ const LoginPage = () => {
               >
                 <Form>
                   <div className="mb-3">
-  <label htmlFor="username" className="visually-hidden">{t('login.username')}</label>
+                    <label htmlFor="username" className="visually-hidden">{t('login.username')}</label>
                     <Field
                       id="username"
                       name="username"
