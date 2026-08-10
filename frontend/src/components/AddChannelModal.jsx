@@ -45,6 +45,7 @@ const AddChannelModal = ({ isOpen, onClose }) => {
             name="name"
             type="text"
             placeholder={t('modals.addChannel.placeholder')}
+            aria-label={t('modals.addChannel.placeholder')}
             value={formik.values.name}
             onChange={formik.handleChange}
             disabled={formik.isSubmitting}
@@ -57,7 +58,7 @@ const AddChannelModal = ({ isOpen, onClose }) => {
         </Form.Group>
         <div className="d-flex justify-content-end gap-2">
           <Button variant="secondary" onClick={onClose}>
-            Отмена
+            {t('modals.renameChannel.cancel')}
           </Button>
           <Button type="submit" variant="primary" disabled={formik.isSubmitting}>
             {formik.isSubmitting ? t('modals.addChannel.loading') : t('modals.addChannel.submit')}

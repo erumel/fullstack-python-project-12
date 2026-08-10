@@ -53,6 +53,7 @@ export default {
         placeholder: 'Имя канала',
         submit: 'Создать',
         loading: 'Создание...',
+        cancel: 'Отмена',
         errors: {
           badWords: 'Недопустимое название',
           length: 'От 3 до 20 символов',
@@ -62,8 +63,10 @@ export default {
       },
       renameChannel: {
         title: 'Переименовать канал',
+        placeholder: 'Имя канала',
         submit: 'Сохранить',
         loading: 'Сохранение...',
+        cancel: 'Отмена',
       },
       removeChannel: {
         title: 'Удалить канал',

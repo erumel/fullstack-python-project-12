@@ -2,7 +2,7 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import { Form, Button, Alert } from 'react-bootstrap'
+import { Form, Button } from 'react-bootstrap'
 import { renameChannel } from '../features/channels/channelsSlice'
 import Modal from './Modal'
 import { cleanText, hasBadWords } from '../utils/profanity'
@@ -51,17 +51,16 @@ const RenameChannelModal = ({ isOpen, onClose, channel }) => {
             onChange={formik.handleChange}
             disabled={formik.isSubmitting}
             autoFocus
+            aria-label={t('modals.renameChannel.placeholder')}
             isInvalid={formik.errors.name && formik.touched.name}
           />
           {formik.errors.name && formik.touched.name && (
-            <Alert variant="danger" className="mt-2 py-1">
-              {formik.errors.name}
-            </Alert>
+            <div className="text-danger mt-2 small">{formik.errors.name}</div>
           )}
         </Form.Group>
         <div className="d-flex justify-content-end gap-2">
           <Button variant="secondary" onClick={onClose}>
-            Отмена
+            {t('modals.renameChannel.cancel')}
           </Button>
           <Button type="submit" variant="primary" disabled={formik.isSubmitting}>
             {formik.isSubmitting ? t('modals.renameChannel.loading') : t('modals.renameChannel.submit')}
