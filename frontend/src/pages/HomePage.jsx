@@ -53,7 +53,7 @@ const HomePage = () => {
   }, [currentChannelId])
 
   const currentChannelMessages = messages.filter(
-    msg => msg.channelId === currentChannelId,
+    msg => String(msg.channelId) === String(currentChannelId),
   )
 
   const formik = useFormik({
