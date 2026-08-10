@@ -158,6 +158,7 @@ const HomePage = () => {
                   type="text"
                   name="body"
                   placeholder={t('chat.inputPlaceholder')}
+                  aria-label={t('chat.newMessage')}
                   value={formik.values.body}
                   onChange={formik.handleChange}
                   disabled={sending}
