@@ -20,7 +20,7 @@ export default {
       title: 'Регистрация',
       username: 'Имя пользователя',
       password: 'Пароль',
-      confirmPassword: 'Подтверждение пароля',
+      confirmPassword: 'Подтвердите пароль',
       submit: 'Зарегистрироваться',
       loading: 'Регистрация...',
       hasAccount: 'Уже есть аккаунт?',
