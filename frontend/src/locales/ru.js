@@ -45,6 +45,7 @@ export default {
       messagesCount_one: '{{count}} сообщение',
       messagesCount_few: '{{count}} сообщения',
       messagesCount_many: '{{count}} сообщений',
+      newMessage: 'Новое сообщение',
     },
     modals: {
       addChannel: {
