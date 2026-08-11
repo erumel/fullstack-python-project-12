@@ -44,14 +44,15 @@ const RenameChannelModal = ({ isOpen, onClose, channel }) => {
     <Modal isOpen={isOpen} onClose={onClose} title={t('modals.renameChannel.title')}>
       <Form onSubmit={formik.handleSubmit}>
         <Form.Group className="mb-3">
-          <Form.Control
+         <Form.Control
             name="name"
             type="text"
+            placeholder={t('modals.addChannel.placeholder')}
+            aria-label={t('modals.addChannel.placeholder')}
             value={formik.values.name}
             onChange={formik.handleChange}
             disabled={formik.isSubmitting}
             autoFocus
-            aria-label={t('modals.renameChannel.placeholder')}
             isInvalid={formik.errors.name && formik.touched.name}
           />
           {formik.errors.name && formik.touched.name && (
