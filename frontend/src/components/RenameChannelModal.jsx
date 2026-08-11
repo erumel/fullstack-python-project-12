@@ -44,7 +44,8 @@ const RenameChannelModal = ({ isOpen, onClose, channel }) => {
     <Modal isOpen={isOpen} onClose={onClose} title={t('modals.renameChannel.title')}>
       <Form onSubmit={formik.handleSubmit}>
         <Form.Group className="mb-3">
-         <Form.Control
+          <Form.Label>{t('modals.addChannel.placeholder')}</Form.Label>
+          <Form.Control
             name="name"
             type="text"
             placeholder={t('modals.addChannel.placeholder')}
