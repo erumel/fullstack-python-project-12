@@ -88,7 +88,7 @@ const HomePage = () => {
               className="p-0"
               style={{ width: 22, height: 22, fontSize: 20, marginTop: -5 }}
             >
-              <span style={{ position: 'relative', top: -6.5 }}>+</span>
+              +
             </Button>
           </div>
           <div className="flex-grow-1 messages-scroll" style={{ overflowY: 'auto', minHeight: 0 }}>
